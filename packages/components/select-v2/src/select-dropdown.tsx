@@ -11,9 +11,11 @@ import GroupItem from './group-item.vue'
 import OptionItem from './option-item.vue'
 
 import { selectV2InjectionKey } from './token'
+import { useOptionProps } from './useOptionProps'
+import type { PropType } from 'vue'
 
 import type { ItemProps } from '@element-plus/components/virtual-list'
-import type { Option, OptionItemProps } from './select.types'
+import type { Option, OptionItemProps, SelectOptionProps } from './select.types'
 
 export default defineComponent({
   name: 'ElSelectDropdown',
@@ -25,10 +27,14 @@ export default defineComponent({
     },
     hoveringIndex: Number,
     width: Number,
+    config: {
+      type: Object as PropType<SelectOptionProps>,
+    },
   },
   setup(props, { slots, expose }) {
     const select = inject(selectV2InjectionKey)!
     const ns = useNamespace('select')
+    const { getDisabledValue, getDropdownLabel } = useOptionProps(props.config)
     const cachedHeights = ref<Array<number>>([])
 
     const listRef = ref()
@@ -152,16 +158,17 @@ export default defineComponent({
         <OptionItem
           {...itemProps}
           selected={isSelected}
-          disabled={item.disabled || isDisabled}
+          disabled={getDisabledValue(item) || isDisabled}
           created={!!item.created}
           hovering={isHovering}
           item={item}
           onSelect={onSelect}
           onHover={onHover}
+          config={props.config}
         >
           {{
             default: (props: OptionItemProps) =>
-              slots.default?.(props) || <span>{item.label}</span>,
+              slots.default?.(props) || <span>{getDropdownLabel(item)}</span>,
           }}
         </OptionItem>
       )

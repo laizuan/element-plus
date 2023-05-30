@@ -13,7 +13,7 @@
     @click.stop="selectOptionClick"
   >
     <slot :item="item" :index="index" :disabled="disabled">
-      <span>{{ item.label }}</span>
+      <span>{{ getDropdownLabel(item) }}</span>
     </slot>
   </li>
 </template>
@@ -24,16 +24,19 @@ import { defineComponent } from 'vue'
 import { useNamespace } from '@element-plus/hooks'
 import { useOption } from './useOption'
 import { OptionProps } from './defaults'
+import { useOptionProps } from './useOptionProps'
 
 export default defineComponent({
   props: OptionProps,
   emits: ['select', 'hover'],
   setup(props, { emit }) {
     const ns = useNamespace('select')
+    const { getDropdownLabel } = useOptionProps(props.config)
     const { hoverItem, selectOptionClick } = useOption(props, { emit })
     return {
       ns,
       hoverItem,
+      getDropdownLabel,
       selectOptionClick,
     }
   },

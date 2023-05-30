@@ -2,9 +2,9 @@ import { placements } from '@popperjs/core'
 import { definePropType, isValidComponentSize } from '@element-plus/utils'
 import { useTooltipContentProps } from '@element-plus/components/tooltip'
 import { CircleClose } from '@element-plus/icons-vue'
+import type { OptionType, SelectOptionProps } from './select.types'
 import type { Component, PropType } from 'vue'
 import type { ComponentSize } from '@element-plus/constants'
-import type { OptionType } from './select.types'
 import type { Options, Placement } from '@element-plus/components/popper'
 
 export const SelectProps = {
@@ -110,6 +110,11 @@ export const SelectProps = {
     values: placements,
     default: 'bottom-start',
   },
+  // ============= 自定义新功能开始 ============= //
+  props: {
+    type: Object as PropType<SelectOptionProps>,
+  },
+  // ============= 自定义新功能结束 ============= //
 }
 
 export const OptionProps = {
@@ -121,4 +126,7 @@ export const OptionProps = {
   style: Object,
   selected: Boolean,
   created: Boolean,
+  config: {
+    type: Object as PropType<SelectOptionProps>,
+  },
 }

@@ -58,7 +58,7 @@
                     :style="{
                       maxWidth: `${tagMaxWidth}px`,
                     }"
-                    >{{ item?.label }}</span
+                    >{{ getLabel(item) }}</span
                   >
                 </el-tag>
               </div>
@@ -288,6 +288,7 @@
         <el-select-menu
           ref="menuRef"
           :data="filteredOptions"
+          :config="props"
           :width="popperSize"
           :hovering-index="states.hoveringIndex"
           :scrollbar-always-on="scrollbarAlwaysOn"
@@ -382,6 +383,8 @@ export default defineComponent({
 
     return {
       ...API,
+      focus: API.toggleMenu,
+      blur: API.handleClickOutside,
       modelValue,
     }
   },
