@@ -1,9 +1,11 @@
 // @ts-nocheck
 import { computed, ref } from 'vue'
+import { useOptionProps } from './useOptionProps'
 import type { ISelectProps } from './token'
 import type { Option } from './select.types'
 
 export function useAllowCreate(props: ISelectProps, states) {
+  const { getLabelValue } = useOptionProps(props.props)
   const createOptionCount = ref(0)
   const cachedSelectedOption = ref<Option>(null)
 
@@ -65,7 +67,7 @@ export function useAllowCreate(props: ISelectProps, states) {
       !option.created ||
       (option.created &&
         props.reserveKeyword &&
-        states.inputValue === option.label)
+        states.inputValue === getLabelValue(option))
     ) {
       return
     }

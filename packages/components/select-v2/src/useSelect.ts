@@ -18,6 +18,7 @@ import { useAllowCreate } from './useAllowCreate'
 import { flattenOptions } from './util'
 
 import { useInput } from './useInput'
+import { useOptionProps } from './useOptionProps'
 import type ElTooltip from '@element-plus/components/tooltip'
 import type { SelectProps } from './defaults'
 import type { CSSProperties, ExtractPropTypes } from 'vue'
@@ -37,6 +38,8 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
   const nsSelectV2 = useNamespace('select-v2')
   const nsInput = useNamespace('input')
   const { form: elForm, formItem: elFormItem } = useFormItem()
+
+  const { getLabelValue, getDropdownLabel } = useOptionProps(props.props)
 
   const states = reactive({
     inputValue: DEFAULT_INPUT_PLACEHOLDER,
@@ -143,7 +146,9 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
       const query = states.inputValue
       // when query was given, we should test on the label see whether the label contains the given query
       const regexp = new RegExp(escapeStringRegexp(query), 'i')
-      const containsQueryString = query ? regexp.test(o.label || '') : true
+      const containsQueryString = query
+        ? regexp.test(getDropdownLabel(o) || '')
+        : true
       return containsQueryString
     }
     if (props.loading) {
@@ -168,7 +173,8 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
           }
           return null
         })
-        .filter((v) => v !== null)
+        .filter((v) => v !== null),
+      getLabel
     )
   })
 
@@ -374,7 +380,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
   // if the selected item is item then we get label via indexing
   // otherwise it should be string we simply return the item itself.
   const getLabel = (item: unknown) => {
-    return isObject(item) ? item.label : item
+    return getLabelValue(item)
   }
 
   const resetInputHeight = () => {
@@ -444,7 +450,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
       setSoftFocus()
     } else {
       selectedIndex.value = idx
-      states.selectedLabel = option.label
+      states.selectedLabel = getLabel(option)
       update(getValueKey(option))
       expanded.value = false
       states.isComposing = false
@@ -694,7 +700,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
           (option) => getValueKey(option) === getValueKey(props.modelValue)
         )
         if (~selectedItemIndex) {
-          states.selectedLabel = options[selectedItemIndex].label
+          states.selectedLabel = getLabel(options[selectedItemIndex])
           updateHoveringIndex(selectedItemIndex)
         } else {
           states.selectedLabel = `${props.modelValue}`
