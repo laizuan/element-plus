@@ -9,6 +9,7 @@ import {
   ValidateComponentsMap,
   debugWarn,
   escapeStringRegexp,
+  isBoolean,
 } from '@element-plus/utils'
 import { useFormItem, useFormSize } from '@element-plus/components/form'
 
@@ -306,15 +307,25 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
     popper.value?.updatePopper()
   }
 
-  const toggleMenu = () => {
+  // 强制显示下拉选项
+  const forceMenu = (expand: boolean) => {
+    return toggleSelectOption(expand)
+  }
+
+  const toggleSelectOption = (expand?: boolean) => {
     if (props.automaticDropdown) return
     if (!selectDisabled.value) {
       if (states.isComposing) states.softFocus = true
       return nextTick(() => {
-        expanded.value = !expanded.value
+        // 允许设置显示隐藏
+        expanded.value = isBoolean(expand) ? expand : !expanded.value
         inputRef.value?.focus?.()
       })
     }
+  }
+
+  const toggleMenu = () => {
+    return toggleSelectOption()
   }
 
   const onInputChange = () => {
@@ -483,6 +494,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
   }
 
   const handleFocus = (event: FocusEvent) => {
+    console.log(states)
     const focused = states.isComposing
     states.isComposing = true
     if (!states.softFocus) {
@@ -843,6 +855,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
     handleCompositionStart,
     handleCompositionEnd,
     handleCompositionUpdate,
+    forceMenu,
   }
 }
 
