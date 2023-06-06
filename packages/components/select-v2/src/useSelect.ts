@@ -495,6 +495,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
   }
 
   const handleFocus = (event: FocusEvent) => {
+    console.log(states)
     const focused = states.isComposing
     states.isComposing = true
     if (!states.softFocus) {
