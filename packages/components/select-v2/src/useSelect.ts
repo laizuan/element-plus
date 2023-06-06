@@ -466,8 +466,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
       expanded.value = false
       states.isComposing = false
       states.isSilentBlur = byClick
-
-      states.softFocus = true
+      states.softFocus = true // 解决调用input.focus()不能显示下拉列表问题
       selectNewOption(option)
       if (!option.created) {
         clearAllNewOption()
@@ -500,7 +499,10 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
     states.isComposing = true
     if (!states.softFocus) {
       // If already in the focus state, shouldn't trigger event
-      if (!focused) emit('focus', event)
+      if (!focused) {
+        forceMenu(true) // 解决调用input.focus()不能显示下拉列表问题
+        emit('focus', event)
+      }
     } else {
       states.softFocus = false
     }
@@ -623,7 +625,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
       ~states.hoveringIndex &&
       filteredOptions.value[states.hoveringIndex]
     ) {
-      onSelect(
+      onSeonSelect(
         filteredOptions.value[states.hoveringIndex],
         states.hoveringIndex,
         false

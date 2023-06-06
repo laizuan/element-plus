@@ -1,5 +1,5 @@
 #! /bin/bash
-
+set -o errexit
 pnpm clean
 
 tar -zcvf element-plus.tar.gz ./packages/
