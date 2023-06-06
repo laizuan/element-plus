@@ -466,6 +466,8 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
       expanded.value = false
       states.isComposing = false
       states.isSilentBlur = byClick
+
+      states.softFocus = true
       selectNewOption(option)
       if (!option.created) {
         clearAllNewOption()
@@ -494,7 +496,6 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
   }
 
   const handleFocus = (event: FocusEvent) => {
-    console.log(states)
     const focused = states.isComposing
     states.isComposing = true
     if (!states.softFocus) {
