@@ -625,7 +625,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
       ~states.hoveringIndex &&
       filteredOptions.value[states.hoveringIndex]
     ) {
-      onSelect(
+      onSeonSelect(
         filteredOptions.value[states.hoveringIndex],
         states.hoveringIndex,
         false
