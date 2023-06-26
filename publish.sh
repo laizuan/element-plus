@@ -1,9 +1,7 @@
 #! /bin/bash
 pnpm clean
 
-tar -zcvf element-plus.tar.gz ./packages/
-md5=($(md5sum element-plus.tar.gz))
-rm -rf ./element-plus.tar.gz
+md5=($(git rev-parse HEAD))
 
 read -p "请输入要发布的版本号 x.x.x-stable.x 格式  " version
 
