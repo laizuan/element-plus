@@ -12,10 +12,10 @@ import {
   INPUT_EVENT,
   UPDATE_MODEL_EVENT,
 } from '@element-plus/constants'
+import { Check, Close } from '@element-plus/icons-vue'
 import type { ComponentSize } from '@element-plus/constants'
 import type Switch from './switch.vue'
 import type { ExtractPropTypes, PropType } from 'vue'
-
 export const switchProps = buildProps({
   /**
    * @description binding value, it should be equivalent to either `active-value` or `inactive-value`, by default it's `boolean` type
@@ -57,19 +57,21 @@ export const switchProps = buildProps({
    */
   inlinePrompt: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   /**
    * @description component of the icon displayed in action when in `off` state
    */
   inactiveActionIcon: {
     type: iconPropType,
+    default: Close,
   },
   /**
    * @description component of the icon displayed in action when in `on` state
    */
   activeActionIcon: {
     type: iconPropType,
+    default: Check,
   },
   /**
    * @description component of the icon displayed when in `on` state, overrides `active-text`
