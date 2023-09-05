@@ -119,7 +119,7 @@
                 :loading="confirmButtonLoading"
                 :type="extraButtonType"
                 :disabled="confirmButtonDisabled"
-                :class="[cancelButtonClass]"
+                :class="[extraButtonClass]"
                 :round="roundButton"
                 :size="btnSize"
                 @click="handleAction('extra')"
@@ -190,7 +190,6 @@ import {
 import { ElIcon } from '@element-plus/components/icon'
 import ElFocusTrap from '@element-plus/components/focus-trap'
 import { useGlobalComponentSettings } from '@element-plus/components/config-provider'
-
 import type { ComponentPublicInstance, DefineComponent, PropType } from 'vue'
 import type { ComponentSize } from '@element-plus/constants'
 import type {
