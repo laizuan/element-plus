@@ -383,7 +383,7 @@ export default defineComponent({
 
     return {
       ...API,
-      focus: API.toggleMenu,
+      focus: API.forceMenu,
       blur: API.handleClickOutside,
       modelValue,
     }
