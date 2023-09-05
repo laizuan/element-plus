@@ -130,6 +130,7 @@
               <el-button
                 v-if="showCancelButton"
                 :loading="cancelButtonLoading"
+                :type="cancelButtonType"
                 :class="[cancelButtonClass]"
                 :round="roundButton"
                 :size="btnSize"
@@ -141,7 +142,7 @@
               <el-button
                 v-show="showConfirmButton"
                 ref="confirmRef"
-                type="primary"
+                :type="confirmButtonType"
                 :loading="confirmButtonLoading"
                 :class="[confirmButtonClasses]"
                 :round="roundButton"
@@ -318,6 +319,8 @@ export default defineComponent({
       extraButtonType: 'default',
       extraButtonClass: '',
       showExtraButton: false,
+      cancelButtonType: 'default',
+      confirmButtonType: 'primary',
     })
 
     const typeClass = computed(() => {

@@ -69,6 +69,8 @@ export declare interface MessageBoxState {
   extraButtonClass: string
   showExtraButton: boolean
   extraButtonType: ButtonType
+  cancelButtonType: string
+  confirmButtonType: string
 }
 
 export type Callback =
@@ -196,6 +198,14 @@ export interface ElMessageBoxOptions {
   showExtraButton?: boolean
   /** 自定义拓展按钮类型 */
   extraButtonType?: ButtonType
+  /**
+   * 自定义取消按钮类型
+   */
+  cancelButtonType?: ButtonType
+  /**
+   * 自定义确定按钮类型
+   */
+  confirmButtonType?: ButtonType
 }
 
 export type ElMessageBoxShortcutMethod = ((
