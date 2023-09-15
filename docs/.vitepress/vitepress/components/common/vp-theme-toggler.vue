@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { isDark, toggleDark } from '../../composables/dark'
+import { isDark } from '../../composables/dark'
 import DarkIcon from '../icons/dark.vue'
 import LightIcon from '../icons/light.vue'
 
 const darkMode = ref(isDark.value)
 
 watch(
-  () => darkMode.value,
-  () => {
-    toggleDark()
+  () => isDark.value,
+  (val) => {
+    darkMode.value = val
   }
 )
 </script>
