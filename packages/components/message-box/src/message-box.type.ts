@@ -2,8 +2,16 @@ import type { AppContext, CSSProperties, Component, VNode } from 'vue'
 import type { ComponentSize } from '@element-plus/constants'
 
 type MessageType = '' | 'success' | 'warning' | 'info' | 'error'
+type ButtonType =
+  | ''
+  | 'default'
+  | 'primary'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'danger'
 
-export type Action = 'confirm' | 'close' | 'cancel'
+export type Action = 'confirm' | 'close' | 'cancel' | 'extra'
 export type MessageBoxType = '' | 'prompt' | 'alert' | 'confirm'
 export type MessageBoxData = MessageBoxInputData & Action
 export interface MessageBoxInputData {
@@ -55,6 +63,12 @@ export declare interface MessageBoxState {
   // isOnComposition: false, // temporary remove
   validateError: boolean
   zIndex: number
+
+  // 添加拓展按钮，使dialog支持多一个按钮 2023-09-05 laizuan
+  extraButtonText: string
+  extraButtonClass: string
+  showExtraButton: boolean
+  extraButtonType: ButtonType
 }
 
 export type Callback =
@@ -173,6 +187,15 @@ export interface ElMessageBoxOptions {
 
   /** Custom element to append the message box to */
   appendTo?: HTMLElement | string
+
+  /** 拓展按钮文案 */
+  extraButtonText?: string
+  /** 自定义拓展按钮样式 */
+  extraButtonClass?: string
+  /** 是否显示拓展按钮 */
+  showExtraButton?: boolean
+  /** 自定义拓展按钮类型 */
+  extraButtonType?: ButtonType
 }
 
 export type ElMessageBoxShortcutMethod = ((

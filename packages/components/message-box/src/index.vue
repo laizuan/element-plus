@@ -115,6 +115,19 @@
             </div>
             <div :class="ns.e('btns')">
               <el-button
+                v-if="showExtraButton"
+                :loading="confirmButtonLoading"
+                :type="extraButtonType"
+                :disabled="confirmButtonDisabled"
+                :class="[cancelButtonClass]"
+                :round="roundButton"
+                :size="btnSize"
+                @click="handleAction('extra')"
+                @keydown.prevent.enter="handleAction('extra')"
+              >
+                {{ extraButtonText }}
+              </el-button>
+              <el-button
                 v-if="showCancelButton"
                 :loading="cancelButtonLoading"
                 :class="[cancelButtonClass]"
@@ -300,6 +313,12 @@ export default defineComponent({
       // isOnComposition: false, // temporary remove
       validateError: false,
       zIndex: nextZIndex(),
+
+      // 添加拓展按钮，使dialog支持多一个按钮 2023-09-05 laizuan
+      extraButtonText: '',
+      extraButtonType: 'default',
+      extraButtonClass: '',
+      showExtraButton: false,
     })
 
     const typeClass = computed(() => {
