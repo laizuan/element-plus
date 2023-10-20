@@ -31,3 +31,7 @@ rm -rf ./.npmignore
 echo "✅ Publish completed"
 
 git reset --hard HEAD
+
+git tag v$version
+git push origin v$version
+git push origin main
