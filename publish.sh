@@ -1,13 +1,19 @@
 #! /bin/bash
+set -e
 pnpm clean
-
 md5=($(git rev-parse HEAD))
 
 read -p "请输入要发布的版本号 x.x.x-stable.x 格式  " version
 
 export TAG_VERSION=$version
 export GIT_HEAD=$md5
-sh ./scripts/publish.sh
+
+
+pnpm i --frozen-lockfile
+pnpm update:version
+
+pnpm build
+
 
 authToken=$(cat ./.npmtoken)
 
@@ -23,7 +29,7 @@ cat > ./.npmignore << EOF
 .npmrc
 EOF
 
-npm publish --access public
+npm publish --provenance --access public
 
 rm -rf ./.npmrc
 rm -rf ./.npmignore
