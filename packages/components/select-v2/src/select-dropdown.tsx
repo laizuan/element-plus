@@ -17,13 +17,12 @@ import { useNamespace } from '@element-plus/hooks'
 import { EVENT_CODE } from '@element-plus/constants'
 import GroupItem from './group-item.vue'
 import OptionItem from './option-item.vue'
+import { useProps } from './useProps'
 
 import { selectV2InjectionKey } from './token'
-import { useOptionProps } from './useOptionProps'
-import type { PropType } from 'vue'
 
 import type { ItemProps } from '@element-plus/components/virtual-list'
-import type { Option, OptionItemProps, SelectOptionProps } from './select.types'
+import type { Option, OptionItemProps } from './select.types'
 
 export default defineComponent({
   name: 'ElSelectDropdown',
@@ -35,14 +34,12 @@ export default defineComponent({
     },
     hoveringIndex: Number,
     width: Number,
-    config: {
-      type: Object as PropType<SelectOptionProps>,
-    },
   },
   setup(props, { slots, expose }) {
     const select = inject(selectV2InjectionKey)!
     const ns = useNamespace('select')
-    const { getDisabledValue, getDropdownLabel } = useOptionProps(props.config)
+    const { getLabel, getValue, getDisabled } = useProps(select.props)
+
     const cachedHeights = ref<Array<number>>([])
 
     const listRef = ref()
@@ -98,9 +95,9 @@ export default defineComponent({
 
     const isItemSelected = (modelValue: any[] | any, target: Option) => {
       if (select.props.multiple) {
-        return contains(modelValue, target.value)
+        return contains(modelValue, getValue(target))
       }
-      return isEqual(modelValue, target.value)
+      return isEqual(modelValue, getValue(target))
     }
 
     const isItemDisabled = (modelValue: any[] | any, selected: boolean) => {
@@ -165,17 +162,16 @@ export default defineComponent({
         <OptionItem
           {...itemProps}
           selected={isSelected}
-          disabled={getDisabledValue(item) || isDisabled}
+          disabled={getDisabled(item) || isDisabled}
           created={!!item.created}
           hovering={isHovering}
           item={item}
           onSelect={onSelect}
           onHover={onHover}
-          config={props.config}
         >
           {{
             default: (props: OptionItemProps) =>
-              slots.default?.(props) || <span>{getDropdownLabel(item)}</span>,
+              slots.default?.(props) || <span>{getLabel(item)}</span>,
           }}
         </OptionItem>
       )

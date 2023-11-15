@@ -9,21 +9,17 @@ import {
   ValidateComponentsMap,
   debugWarn,
   escapeStringRegexp,
-  isBoolean,
 } from '@element-plus/utils'
 import { useFormItem, useFormSize } from '@element-plus/components/form'
 
 import { ArrowUp } from '@element-plus/icons-vue'
 import { useAllowCreate } from './useAllowCreate'
-
-import { flattenOptions } from './util'
-
 import { useInput } from './useInput'
-import { useOptionProps } from './useOptionProps'
+import { useProps } from './useProps'
+import type { CSSProperties } from 'vue'
 import type ElTooltip from '@element-plus/components/tooltip'
-import type { SelectProps } from './defaults'
-import type { CSSProperties, ExtractPropTypes } from 'vue'
 import type { Option, OptionType } from './select.types'
+import type { ISelectProps } from './token'
 
 const DEFAULT_INPUT_PLACEHOLDER = ''
 const MINIMUM_INPUT_WIDTH = 11
@@ -33,14 +29,13 @@ const TAG_BASE_WIDTH = {
   small: 33,
 }
 
-const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
+const useSelect = (props: ISelectProps, emit) => {
   // inject
   const { t } = useLocale()
   const nsSelectV2 = useNamespace('select-v2')
   const nsInput = useNamespace('input')
   const { form: elForm, formItem: elFormItem } = useFormItem()
-
-  const { getLabelValue, getDropdownLabel } = useOptionProps(props.props)
+  const { getLabel, getValue, getDisabled, getOptions } = useProps(props)
 
   const states = reactive({
     inputValue: DEFAULT_INPUT_PLACEHOLDER,
@@ -147,49 +142,49 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
       const query = states.inputValue
       // when query was given, we should test on the label see whether the label contains the given query
       const regexp = new RegExp(escapeStringRegexp(query), 'i')
-      const containsQueryString = query
-        ? regexp.test(getDropdownLabel(o) || '')
-        : true
+      const containsQueryString = query ? regexp.test(getLabel(o) || '') : true
       return containsQueryString
     }
     if (props.loading) {
       return []
     }
-    return flattenOptions(
-      (props.options as OptionType[])
-        .concat(states.createdOptions)
-        .map((v) => {
-          if (isArray(v.options)) {
-            const filtered = v.options.filter(isValidOption)
-            if (filtered.length > 0) {
-              return {
-                ...v,
-                options: filtered,
-              }
-            }
-          } else {
-            if (props.remote || isValidOption(v as Option)) {
-              return v
-            }
-          }
-          return null
-        })
-        .filter((v) => v !== null),
-      getLabel
-    )
+
+    return [...props.options, ...states.createdOptions].reduce((all, item) => {
+      const options = getOptions(item)
+
+      if (isArray(options)) {
+        const filtered = options.filter(isValidOption)
+
+        if (filtered.length > 0) {
+          all.push(
+            {
+              label: getLabel(item),
+              isTitle: true,
+              type: 'Group',
+            },
+            ...filtered,
+            { type: 'Group' }
+          )
+        }
+      } else if (props.remote || isValidOption(item)) {
+        all.push(item)
+      }
+
+      return all
+    }, []) as OptionType[]
   })
 
   const filteredOptionsValueMap = computed(() => {
     const valueMap = new Map()
 
     filteredOptions.value.forEach((option, index) => {
-      valueMap.set(getValueKey(option.value), { option, index })
+      valueMap.set(getValueKey(getValue(option)), { option, index })
     })
     return valueMap
   })
 
   const optionsAllDisabled = computed(() =>
-    filteredOptions.value.every((option) => option.disabled)
+    filteredOptions.value.every((option) => getDisabled(option))
   )
 
   const selectSize = useFormSize()
@@ -307,25 +302,15 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
     popper.value?.updatePopper()
   }
 
-  // 强制显示下拉选项
-  const forceMenu = (expand: boolean) => {
-    return toggleSelectOption(expand)
-  }
-
-  const toggleSelectOption = (expand?: boolean) => {
+  const toggleMenu = () => {
     if (props.automaticDropdown) return
     if (!selectDisabled.value) {
       if (states.isComposing) states.softFocus = true
       return nextTick(() => {
-        //  允许设置显示隐藏
-        expanded.value = isBoolean(expand) ? expand : !expanded.value
+        expanded.value = !expanded.value
         inputRef.value?.focus?.()
       })
     }
-  }
-
-  const toggleMenu = () => {
-    return toggleSelectOption()
   }
 
   const onInputChange = () => {
@@ -365,7 +350,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
   const update = (val: any) => {
     emit(UPDATE_MODEL_EVENT, val)
     emitChange(val)
-    states.previousValue = val?.toString()
+    states.previousValue = String(val)
   }
 
   const getValueIndex = (arr = [], value: unknown) => {
@@ -386,12 +371,6 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
 
   const getValueKey = (item: unknown) => {
     return isObject(item) ? get(item, props.valueKey) : item
-  }
-
-  // if the selected item is item then we get label via indexing
-  // otherwise it should be string we simply return the item itself.
-  const getLabel = (item: unknown) => {
-    return getLabelValue(item)
   }
 
   const resetInputHeight = () => {
@@ -426,7 +405,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
     if (props.multiple) {
       let selectedOptions = (props.modelValue as any[]).slice()
 
-      const index = getValueIndex(selectedOptions, option.value)
+      const index = getValueIndex(selectedOptions, getValue(option))
       if (index > -1) {
         selectedOptions = [
           ...selectedOptions.slice(0, index),
@@ -438,7 +417,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
         props.multipleLimit <= 0 ||
         selectedOptions.length < props.multipleLimit
       ) {
-        selectedOptions = [...selectedOptions, option.value]
+        selectedOptions = [...selectedOptions, getValue(option)]
         states.cachedOptions.push(option)
         selectNewOption(option)
         updateHoveringIndex(idx)
@@ -462,11 +441,10 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
     } else {
       selectedIndex.value = idx
       states.selectedLabel = getLabel(option)
-      update(option.value)
+      update(getValue(option))
       expanded.value = false
       states.isComposing = false
       states.isSilentBlur = byClick
-      states.softFocus = true // 解决调用input.focus()不能显示下拉列表问题
       selectNewOption(option)
       if (!option.created) {
         clearAllNewOption()
@@ -478,7 +456,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
   const deleteTag = (event: MouseEvent, option: Option) => {
     let selectedOptions = (props.modelValue as any[]).slice()
 
-    const index = getValueIndex(selectedOptions, option.value)
+    const index = getValueIndex(selectedOptions, getValue(option))
 
     if (index > -1 && !selectDisabled.value) {
       selectedOptions = [
@@ -487,7 +465,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
       ]
       states.cachedOptions.splice(index, 1)
       update(selectedOptions)
-      emit('remove-tag', option.value)
+      emit('remove-tag', getValue(option))
       states.softFocus = true
       removeNewOption(option)
       return nextTick(focusAndUpdatePopup)
@@ -500,10 +478,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
     states.isComposing = true
     if (!states.softFocus) {
       // If already in the focus state, shouldn't trigger event
-      if (!focused) {
-        forceMenu(true) // 解决调用input.focus()不能显示下拉列表问题
-        emit('focus', event)
-      }
+      if (!focused) emit('focus', event)
     } else {
       states.softFocus = false
     }
@@ -610,7 +585,7 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
       }
     }
     const option = options[newIndex]
-    if (option.disabled || option.type === 'Group') {
+    if (getDisabled(option) || option.type === 'Group') {
       // prevent dispatching multiple nextTick callbacks.
       return onKeyboardNavigate(direction, newIndex)
     } else {
@@ -718,13 +693,13 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
         const options = filteredOptions.value
         const selectedItemIndex = options.findIndex(
           (option) =>
-            getValueKey(option.value) === getValueKey(props.modelValue)
+            getValueKey(getValue(option)) === getValueKey(props.modelValue)
         )
         if (~selectedItemIndex) {
           states.selectedLabel = getLabel(options[selectedItemIndex])
           updateHoveringIndex(selectedItemIndex)
         } else {
-          states.selectedLabel = `${props.modelValue}`
+          states.selectedLabel = getValueKey(props.modelValue)
         }
       } else {
         states.selectedLabel = ''
@@ -844,6 +819,8 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
     debouncedOnInputChange,
     deleteTag,
     getLabel,
+    getValue,
+    getDisabled,
     getValueKey,
     handleBlur,
     handleClear,
@@ -864,7 +841,6 @@ const useSelect = (props: ExtractPropTypes<typeof SelectProps>, emit) => {
     handleCompositionStart,
     handleCompositionEnd,
     handleCompositionUpdate,
-    forceMenu,
   }
 }
 
