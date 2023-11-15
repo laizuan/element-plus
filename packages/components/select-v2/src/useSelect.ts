@@ -1,7 +1,13 @@
 // @ts-nocheck
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { isArray, isFunction, isObject } from '@vue/shared'
-import { get, isEqual, isNil, debounce as lodashDebounce } from 'lodash-unified'
+import {
+  get,
+  isBoolean,
+  isEqual,
+  isNil,
+  debounce as lodashDebounce,
+} from 'lodash-unified'
 import { useResizeObserver } from '@vueuse/core'
 import { useLocale, useNamespace } from '@element-plus/hooks'
 import { CHANGE_EVENT, UPDATE_MODEL_EVENT } from '@element-plus/constants'
@@ -302,15 +308,26 @@ const useSelect = (props: ISelectProps, emit) => {
     popper.value?.updatePopper()
   }
 
-  const toggleMenu = () => {
+  // 强制显示下拉选项 @lai
+  const forceMenu = (expand: boolean) => {
+    return toggleSelectOption(expand)
+  }
+
+  // 运行设置显示隐藏 @lai
+  const toggleSelectOption = (expand?: boolean) => {
     if (props.automaticDropdown) return
     if (!selectDisabled.value) {
       if (states.isComposing) states.softFocus = true
       return nextTick(() => {
-        expanded.value = !expanded.value
+        //  允许设置显示隐藏
+        expanded.value = isBoolean(expand) ? expand : !expanded.value
         inputRef.value?.focus?.()
       })
     }
+  }
+
+  const toggleMenu = () => {
+    return toggleSelectOption()
   }
 
   const onInputChange = () => {
@@ -444,6 +461,7 @@ const useSelect = (props: ISelectProps, emit) => {
       update(getValue(option))
       expanded.value = false
       states.isComposing = false
+      states.softFocus = true // 解决调用input.focus()不能显示下拉列表问题 @lai
       states.isSilentBlur = byClick
       selectNewOption(option)
       if (!option.created) {
@@ -478,7 +496,10 @@ const useSelect = (props: ISelectProps, emit) => {
     states.isComposing = true
     if (!states.softFocus) {
       // If already in the focus state, shouldn't trigger event
-      if (!focused) emit('focus', event)
+      if (!focused) {
+        forceMenu(true) // 解决调用input.focus()不能显示下拉列表问题
+        emit('focus', event)
+      }
     } else {
       states.softFocus = false
     }
@@ -841,6 +862,9 @@ const useSelect = (props: ISelectProps, emit) => {
     handleCompositionStart,
     handleCompositionEnd,
     handleCompositionUpdate,
+
+    // 新增暴露方法
+    forceMenu,
   }
 }
 

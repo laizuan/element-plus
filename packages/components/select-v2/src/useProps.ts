@@ -12,7 +12,7 @@ export interface Props {
 }
 
 export const defaultProps: Required<Props> = {
-  label: 'label',
+  label: 'desc',
   value: 'value',
   disabled: 'disabled',
   options: 'options',

@@ -390,6 +390,10 @@ export default defineComponent({
     return {
       ...API,
       modelValue,
+
+      // 暴露额外方法 @lai
+      focus: API.forceMenu,
+      blur: API.handleClickOutside,
     }
   },
 })
