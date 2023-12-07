@@ -358,9 +358,10 @@ const useSelect = (props: ISelectProps, emit) => {
     }
   }
 
+  // change 事件新增oldVal @lai 20231207
   const emitChange = (val: any | any[]) => {
     if (!isEqual(props.modelValue, val)) {
-      emit(CHANGE_EVENT, val)
+      emit(CHANGE_EVENT, val, props.modelValue)
     }
   }
 

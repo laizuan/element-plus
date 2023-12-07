@@ -636,9 +636,10 @@ export const useSelect = (props, states: States, ctx) => {
     handleQueryChange(e.target.value)
   }, debounce.value)
 
+  // change 事件新增oldVal @lai 20231207
   const emitChange = (val) => {
     if (!isEqual(props.modelValue, val)) {
-      ctx.emit(CHANGE_EVENT, val)
+      ctx.emit(CHANGE_EVENT, val, props.modelValue)
     }
   }
 
