@@ -6,10 +6,11 @@
 
 <script lang="ts" setup>
 import { computed, provide, reactive, toRefs, watch } from 'vue'
+import { useEventBus } from '@vueuse/core'
 import { debugWarn, isFunction } from '@element-plus/utils'
 import { useNamespace } from '@element-plus/hooks'
 import { useFormSize } from './hooks'
-import { formContextKey } from './constants'
+import { formContextKey, scrollToFieldKey } from './constants'
 import { formEmits, formProps } from './form'
 import { filterFields, useFormLabelWidth } from './utils'
 
@@ -29,7 +30,7 @@ defineOptions({
 })
 const props = defineProps(formProps)
 const emit = defineEmits(formEmits)
-
+const bus = useEventBus(scrollToFieldKey)
 const fields: FormItemContext[] = []
 
 const formSize = useFormSize()
@@ -47,6 +48,16 @@ const formClasses = computed(() => {
     },
   ]
 })
+
+/**
+ * 获取FormItemContext
+ * @param prop 字段名称
+ * @author laizuan
+ */
+const getField = (prop: string): FormItemContext | null => {
+  const field = filterFields(fields, prop)
+  return field && field.length > 0 ? field[0] : null
+}
 
 const addField: FormContext['addField'] = (field) => {
   fields.push(field)
@@ -146,6 +157,8 @@ const scrollToField = (prop: FormItemProp) => {
   const field = filterFields(fields, prop)[0]
   if (field) {
     field.$el?.scrollIntoView(props.scrollIntoViewOptions)
+    // 发送滚动事件。laizuan
+    bus.emit(field)
   }
 }
 
@@ -196,5 +209,11 @@ defineExpose({
    * @description Scroll to the specified fields.
    */
   scrollToField,
+
+  /**
+   * @description 获取prop的item对象
+   * @author laizuan
+   */
+  getField,
 })
 </script>
