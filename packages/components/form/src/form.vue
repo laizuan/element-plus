@@ -6,11 +6,10 @@
 
 <script lang="ts" setup>
 import { computed, provide, reactive, toRefs, watch } from 'vue'
-import { useEventBus } from '@vueuse/core'
 import { debugWarn, isFunction } from '@element-plus/utils'
 import { useNamespace } from '@element-plus/hooks'
 import { useFormSize } from './hooks'
-import { formContextKey, scrollToFieldKey } from './constants'
+import { formContextKey } from './constants'
 import { formEmits, formProps } from './form'
 import { filterFields, useFormLabelWidth } from './utils'
 
@@ -30,7 +29,6 @@ defineOptions({
 })
 const props = defineProps(formProps)
 const emit = defineEmits(formEmits)
-const bus = useEventBus(scrollToFieldKey)
 const fields: FormItemContext[] = []
 
 const formSize = useFormSize()
@@ -157,8 +155,6 @@ const scrollToField = (prop: FormItemProp) => {
   const field = filterFields(fields, prop)[0]
   if (field) {
     field.$el?.scrollIntoView(props.scrollIntoViewOptions)
-    // 发送滚动事件。laizuan
-    bus.emit(field)
   }
 }
 
