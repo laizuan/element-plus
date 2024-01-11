@@ -29,6 +29,7 @@ defineOptions({
 })
 const props = defineProps(formProps)
 const emit = defineEmits(formEmits)
+
 const fields: FormItemContext[] = []
 
 const formSize = useFormSize()
@@ -47,14 +48,8 @@ const formClasses = computed(() => {
   ]
 })
 
-/**
- * 获取FormItemContext
- * @param prop 字段名称
- * @author laizuan
- */
-const getField = (prop: string): FormItemContext | null => {
-  const field = filterFields(fields, prop)
-  return field && field.length > 0 ? field[0] : null
+const getField: FormContext['getField'] = (prop) => {
+  return fields.find((field) => field.prop === prop)
 }
 
 const addField: FormContext['addField'] = (field) => {
@@ -177,6 +172,7 @@ provide(
     resetFields,
     clearValidate,
     validateField,
+    getField,
     addField,
     removeField,
 
