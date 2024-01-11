@@ -242,6 +242,7 @@ import ElSelectMenu from './select-dropdown'
 import useSelect from './useSelect'
 import { SelectProps } from './defaults'
 import { selectV2InjectionKey } from './token'
+
 export default defineComponent({
   name: 'ElSelectV2',
   components: {
@@ -298,10 +299,6 @@ export default defineComponent({
     return {
       ...API,
       modelValue,
-
-      // 暴露额外方法 @lai
-      focus: API.forceMenu,
-      blur: API.handleClickOutside,
     }
   },
 })
