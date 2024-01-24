@@ -23,7 +23,10 @@
       </component>
     </form-label-wrap>
 
-    <div :class="ns.e('content')" :style="contentStyle">
+    <div
+      :class="[ns.e('content'), ns.e(propClassString)]"
+      :style="contentStyle"
+    >
       <slot />
       <transition-group :name="`${ns.namespace.value}-zoom-in-top`">
         <slot v-if="shouldShowError" name="error" :error="validateMessage">
@@ -152,6 +155,15 @@ const validateClasses = computed(() => [
 const propString = computed(() => {
   if (!props.prop) return ''
   return isString(props.prop) ? props.prop : props.prop.join('.')
+})
+
+/**
+ * 设置每一个ITEM的class，使它是唯一的
+ * @author laizuan
+ */
+const propClassString = computed(() => {
+  if (!props.prop) return ''
+  return isString(props.prop) ? props.prop : props.prop.join('_')
 })
 
 const hasLabel = computed<boolean>(() => {
