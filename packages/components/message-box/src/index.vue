@@ -245,7 +245,10 @@ export default defineComponent({
     },
     center: Boolean,
     draggable: Boolean,
-    overflow: Boolean,
+    overflow: {
+      default: true,
+      type: Boolean,
+    },
     roundButton: {
       default: false,
       type: Boolean,

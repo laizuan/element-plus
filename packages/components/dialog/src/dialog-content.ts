@@ -22,7 +22,10 @@ export const dialogContentProps = buildProps({
   /**
    * @description draggable Dialog can overflow the viewport
    */
-  overflow: Boolean,
+  overflow: {
+    type: Boolean,
+    default: true,
+  },
   /**
    * @description whether the Dialog takes up full screen
    */
