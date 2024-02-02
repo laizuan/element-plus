@@ -38,7 +38,7 @@
             <div
               v-if="title !== null && title !== undefined"
               ref="headerRef"
-              :class="ns.e('header')"
+              :class="[ns.e('header'), { 'show-close': showClose }]"
             >
               <div :class="ns.e('title')">
                 <el-icon
@@ -191,7 +191,8 @@ import {
 import { ElIcon } from '@element-plus/components/icon'
 import ElFocusTrap from '@element-plus/components/focus-trap'
 import { useGlobalComponentSettings } from '@element-plus/components/config-provider'
-import type { ComponentPublicInstance, DefineComponent, PropType } from 'vue'
+
+import type { ComponentPublicInstance, PropType } from 'vue'
 import type { ComponentSize } from '@element-plus/constants'
 import type {
   Action,
@@ -244,6 +245,10 @@ export default defineComponent({
     },
     center: Boolean,
     draggable: Boolean,
+    overflow: {
+      default: true,
+      type: Boolean,
+    },
     roundButton: {
       default: false,
       type: Boolean,
@@ -386,7 +391,8 @@ export default defineComponent({
     )
 
     const draggable = computed(() => props.draggable)
-    useDraggable(rootRef, headerRef, draggable)
+    const overflow = computed(() => props.overflow)
+    useDraggable(rootRef, headerRef, draggable, overflow)
 
     onMounted(async () => {
       await nextTick()
@@ -520,5 +526,5 @@ export default defineComponent({
       t,
     }
   },
-}) as DefineComponent
+})
 </script>
