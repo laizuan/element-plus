@@ -103,7 +103,7 @@ export default {
       next: '下一頁',
       currentPage: '第 {pager} 頁',
       prevPages: '向前 {pager} 頁',
-      nextPages: '向后 {pager} 頁',
+      nextPages: '向後 {pager} 頁',
       deprecationWarning:
         '偵測到已過時的使用方式，請參閱 el-pagination 說明文件以了解更多資訊',
     },
@@ -163,6 +163,11 @@ export default {
     popconfirm: {
       confirmButtonText: '確認',
       cancelButtonText: '取消',
+    },
+    carousel: {
+      leftArrow: '上一張投影片',
+      rightArrow: '下一張投影片',
+      indicator: '投影片切換至索引 {index}',
     },
   },
 }
