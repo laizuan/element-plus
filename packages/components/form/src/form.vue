@@ -12,9 +12,9 @@ import { useFormSize } from './hooks'
 import { formContextKey } from './constants'
 import { formEmits, formProps } from './form'
 import { filterFields, useFormLabelWidth } from './utils'
-import type { Arrayable } from '@element-plus/utils'
 
 import type { ValidateFieldsError } from 'async-validator'
+import type { Arrayable } from '@element-plus/utils'
 import type {
   FormContext,
   FormItemContext,
@@ -201,6 +201,10 @@ defineExpose({
    * @description Scroll to the specified fields.
    */
   scrollToField,
+  /**
+   * @description All fields context.
+   */
+  fields,
 
   /**
    * @description 获取prop的item对象
