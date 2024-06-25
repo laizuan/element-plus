@@ -486,9 +486,10 @@ const select = () => {
 }
 
 const clear = () => {
+  const oldValue = props.modelValue
   emit(UPDATE_MODEL_EVENT, '')
   emit('change', '')
-  emit('clear')
+  emit('clear', oldValue as string)
   emit('input', '')
 }
 

@@ -195,7 +195,11 @@ export const inputEmits = {
   change: (value: string) => isString(value),
   focus: (evt: FocusEvent) => evt instanceof FocusEvent,
   blur: (evt: FocusEvent) => evt instanceof FocusEvent,
-  clear: () => true,
+  /**
+   * 清空输入框的值
+   * @param oldValue 清空前的值
+   */
+  clear: (oldValue: string) => true,
   mouseleave: (evt: MouseEvent) => evt instanceof MouseEvent,
   mouseenter: (evt: MouseEvent) => evt instanceof MouseEvent,
   // NOTE: when autofill by browser, the keydown event is instanceof Event, not KeyboardEvent

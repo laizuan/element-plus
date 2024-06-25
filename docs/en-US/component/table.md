@@ -334,7 +334,6 @@ table/table-layout
 | setScrollLeft      | set horizontal scroll position                                                                                                                                    | ^[Function]`(left?: number) => void`                                       |
 | columns ^(2.7.6)   | Get table columns context.                                                                                                                                        | ^[array]`TableColumnCtx<T>[]`                                              |
 
-
 ## Table-column API
 
 ### Table-column Attributes
