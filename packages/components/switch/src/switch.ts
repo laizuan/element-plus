@@ -29,17 +29,11 @@ export const switchProps = buildProps({
   /**
    * @description whether Switch is disabled
    */
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
+  disabled: Boolean,
   /**
    * @description whether Switch is in loading state
    */
-  loading: {
-    type: Boolean,
-    default: false,
-  },
+  loading: Boolean,
   /**
    * @description size of Switch
    */
@@ -144,13 +138,6 @@ export const switchProps = buildProps({
    */
   tabindex: {
     type: [String, Number],
-  },
-  /**
-   * @deprecated native input aria-label
-   */
-  label: {
-    type: String,
-    default: undefined,
   },
   ...useAriaProps(['ariaLabel']),
 } as const)
