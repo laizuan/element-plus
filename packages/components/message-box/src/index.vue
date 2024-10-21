@@ -115,23 +115,9 @@
             </div>
             <div :class="ns.e('btns')">
               <el-button
-                v-if="showExtraButton"
-                :loading="confirmButtonLoading"
-                :type="extraButtonType"
-                :disabled="confirmButtonDisabled"
-                :class="[extraButtonClass]"
-                :round="roundButton"
-                :size="btnSize"
-                @click="handleAction('extra')"
-                @keydown.prevent.enter="handleAction('extra')"
-              >
-                {{ extraButtonText }}
-              </el-button>
-              <el-button
                 v-if="showCancelButton"
                 :loading="cancelButtonLoading"
                 :loading-icon="cancelButtonLoadingIcon"
-                :type="cancelButtonType"
                 :class="[cancelButtonClass]"
                 :round="roundButton"
                 :size="btnSize"
@@ -143,7 +129,7 @@
               <el-button
                 v-show="showConfirmButton"
                 ref="confirmRef"
-                :type="confirmButtonType"
+                type="primary"
                 :loading="confirmButtonLoading"
                 :loading-icon="confirmButtonLoadingIcon"
                 :class="[confirmButtonClasses]"
@@ -249,10 +235,7 @@ export default defineComponent({
     },
     center: Boolean,
     draggable: Boolean,
-    overflow: {
-      default: true,
-      type: Boolean,
-    },
+    overflow: Boolean,
     roundButton: {
       default: false,
       type: Boolean,
@@ -324,14 +307,6 @@ export default defineComponent({
       // isOnComposition: false, // temporary remove
       validateError: false,
       zIndex: nextZIndex(),
-
-      // 添加拓展按钮，使dialog支持多一个按钮 2023-09-05 laizuan
-      extraButtonText: '',
-      extraButtonType: 'default',
-      extraButtonClass: '',
-      showExtraButton: false,
-      cancelButtonType: 'default',
-      confirmButtonType: 'primary',
     })
 
     const typeClass = computed(() => {
