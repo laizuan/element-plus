@@ -29,7 +29,7 @@ cat > ./.npmignore << EOF
 .npmrc
 EOF
 
-npm publish --provenance --access public
+npm publish  --access public
 
 rm -rf ./.npmrc
 rm -rf ./.npmignore
