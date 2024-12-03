@@ -306,7 +306,10 @@ export const OptionProps = buildProps({
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export const selectEmits = {
   [UPDATE_MODEL_EVENT]: (val: ISelectV2Props['modelValue']) => true,
-  [CHANGE_EVENT]: (val: ISelectV2Props['modelValue']) => true,
+  [CHANGE_EVENT]: (
+    val: ISelectV2Props['modelValue'],
+    oldVal: ISelectV2Props['modelValue']
+  ) => true,
   'remove-tag': (val: unknown) => true,
   'visible-change': (visible: boolean) => true,
   focus: (evt: FocusEvent) => evt instanceof FocusEvent,
