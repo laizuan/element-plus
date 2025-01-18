@@ -329,7 +329,8 @@
 
     .#{$namespace}-input__inner {
       color: map.get($input-disabled, 'text-color');
-      -webkit-text-fill-color: map.get($input-disabled, 'text-color');
+      // 删掉，防止next定义--el-disabled-text-color已输入的文字和placeholder文字颜色一样
+      // -webkit-text-fill-color: map.get($input-disabled, 'text-color');
       cursor: not-allowed;
 
       &::placeholder {
