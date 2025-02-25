@@ -38,5 +38,10 @@
   "i18n-ally.keystyle": "nested",
   "iconify.includes": ["ep"],
   "unocss.root": "./docs",
-  "vue.codeActions.enabled": false
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": "pnpm-lock.yaml, pnpm-workspace.yaml",
+    "tsconfig.json": "tsconfig.*.json",
+    "vitest.config.mts": "vitest.setup.ts, vitest.workspace.ts"
+  }
 }
