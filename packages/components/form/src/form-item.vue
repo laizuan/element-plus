@@ -306,7 +306,7 @@ const doValidate = async (rules: RuleItem[]): Promise<true> => {
       return true as const
     })
     .catch((err: FormValidateFailure) => {
-      onValidationFailed(err as FormValidateFailure)
+      onValidationFailed(err)
       return Promise.reject(err)
     })
 }
