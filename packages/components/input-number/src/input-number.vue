@@ -54,6 +54,7 @@
       :name="name"
       :aria-label="ariaLabel"
       :validate-event="false"
+      :inputmode="inputmode"
       @keydown.up.prevent="increase"
       @keydown.down.prevent="decrease"
       @blur="handleBlur"
@@ -85,7 +86,6 @@ import { vRepeatClick } from '@element-plus/directives'
 import { useLocale, useNamespace } from '@element-plus/hooks'
 import {
   debugWarn,
-  isFirefox,
   isNumber,
   isString,
   isUndefined,
@@ -192,6 +192,20 @@ const getPrecision = (value: number | null | undefined) => {
 }
 const ensurePrecision = (val: number, coefficient: 1 | -1 = 1) => {
   if (!isNumber(val)) return data.currentValue
+  if (val >= Number.MAX_SAFE_INTEGER && coefficient === 1) {
+    debugWarn(
+      'InputNumber',
+      'The value has reached the maximum safe integer limit.'
+    )
+    return val
+  } else if (val <= Number.MIN_SAFE_INTEGER && coefficient === -1) {
+    debugWarn(
+      'InputNumber',
+      'The value has reached the minimum safe integer limit.'
+    )
+    return val
+  }
+
   // Solve the accuracy problem of JS decimal calculation by converting the value to integer.
   return toPrecision(val + props.step * coefficient)
 }
@@ -294,10 +308,10 @@ const handleFocus = (event: MouseEvent | FocusEvent) => {
 
 const handleBlur = (event: MouseEvent | FocusEvent) => {
   data.userInput = null
-  // This is a Firefox-specific problem. When non-numeric content is entered into a numeric input box,
+  // When non-numeric content is entered into a numeric input box,
   // the content displayed on the page is not cleared after the value is cleared. #18533
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1398528
-  if (isFirefox() && data.currentValue === null && input.value?.input) {
+  if (data.currentValue === null && input.value?.input) {
     input.value.input.value = ''
   }
   emit('blur', event)

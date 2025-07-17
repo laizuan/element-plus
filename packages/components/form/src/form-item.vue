@@ -63,7 +63,6 @@ import {
   isArray,
   isBoolean,
   isFunction,
-  isString,
 } from '@element-plus/utils'
 import { useId, useNamespace } from '@element-plus/hooks'
 import { useFormSize } from './hooks'
@@ -162,7 +161,7 @@ const validateClasses = computed(() => [
 
 const propString = computed(() => {
   if (!props.prop) return ''
-  return isString(props.prop) ? props.prop : props.prop.join('.')
+  return isArray(props.prop) ? props.prop.join('.') : props.prop
 })
 
 /**
@@ -180,7 +179,7 @@ const hasLabel = computed<boolean>(() => {
 
 const labelFor = computed<string | undefined>(() => {
   return (
-    props.for || (inputIds.value.length === 1 ? inputIds.value[0] : undefined)
+    props.for ?? (inputIds.value.length === 1 ? inputIds.value[0] : undefined)
   )
 })
 
@@ -394,6 +393,7 @@ const context: FormItemContext = reactive({
   ...toRefs(props),
   $el: formItemRef,
   size: _size,
+  validateMessage,
   validateState,
   labelId,
   inputIds,
@@ -405,6 +405,7 @@ const context: FormItemContext = reactive({
   resetField,
   clearValidate,
   validate,
+  propString,
 })
 
 provide(formItemContextKey, context)

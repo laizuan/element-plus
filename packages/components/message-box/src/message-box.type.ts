@@ -1,16 +1,10 @@
 import type { AppContext, CSSProperties, Component, VNode } from 'vue'
 import type { ComponentSize } from '@element-plus/constants'
+import type { ButtonType } from "@element-plus/components/button";
 
-type MessageType = '' | 'success' | 'warning' | 'info' | 'error'
-type ButtonType =
-  | ''
-  | 'default'
-  | 'primary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'danger'
+type MessageType = '' | 'primary' | 'success' | 'warning' | 'info' | 'error'
 
+// 新增弹窗拓展字段 By:laiz
 export type Action = 'confirm' | 'close' | 'cancel' | 'extra'
 export type MessageBoxType = '' | 'prompt' | 'alert' | 'confirm'
 export type MessageBoxData = MessageBoxInputData & Action
@@ -207,7 +201,7 @@ export interface ElMessageBoxOptions {
 
   /** Custom element to append the message box to */
   appendTo?: HTMLElement | string
-
+  // =============== by lai =============== //
   /** 拓展按钮文案 */
   extraButtonText?: string
   /** 自定义拓展按钮样式 */
