@@ -63,6 +63,7 @@ import {
   isArray,
   isBoolean,
   isFunction,
+  isString,
 } from '@element-plus/utils'
 import { useId, useNamespace } from '@element-plus/hooks'
 import { useFormSize } from './hooks'

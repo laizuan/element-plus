@@ -8,6 +8,7 @@ type MessageType = '' | 'primary' | 'success' | 'warning' | 'info' | 'error'
 export type Action = 'confirm' | 'close' | 'cancel' | 'extra'
 export type MessageBoxType = '' | 'prompt' | 'alert' | 'confirm'
 export type MessageBoxData = MessageBoxInputData & Action
+
 export interface MessageBoxInputData {
   value: string
   action: Action
@@ -66,8 +67,8 @@ export declare interface MessageBoxState {
   extraButtonClass: string
   showExtraButton: boolean
   extraButtonType: ButtonType
-  cancelButtonType: string
-  confirmButtonType: string
+  cancelButtonType: ButtonType
+  confirmButtonType: ButtonType
 }
 
 export type Callback =
@@ -236,6 +237,7 @@ export interface IElMessageBox {
   _context: AppContext | null
 
   /** Show a message box */
+
   // (message: string, title?: string, type?: string): Promise<MessageBoxData>
 
   /** Show a message box */

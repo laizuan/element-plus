@@ -651,8 +651,8 @@ export const useSelect = (props: SelectProps, emit: SelectEmits) => {
     inputRef.value?.focus()
   }
 
-  const blur = () => {
-    handleClickOutside()
+  const blur = (event: Event) => {
+    handleClickOutside(event)
   }
 
   const handleClearClick = (event: Event) => {

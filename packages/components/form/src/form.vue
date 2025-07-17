@@ -222,6 +222,6 @@ defineExpose({
    * @description 获取prop的item对象
    * @author laizuan
    */
-  getField,
+  // getField,
 })
 </script>
