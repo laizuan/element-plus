@@ -1,5 +1,5 @@
 #! /bin/bash
-git fetch upstream
+git fetch element-plus
 
 read -p "需要合并的ElementPlus版本号：" version
 git checkout tags/$version -b v$version
