@@ -1,6 +1,6 @@
 import type { AppContext, CSSProperties, Component, VNode } from 'vue'
 import type { ComponentSize } from '@element-plus/constants'
-import type { ButtonType } from "@element-plus/components/button";
+import type { ButtonType } from '@element-plus/components/button'
 
 type MessageType = '' | 'primary' | 'success' | 'warning' | 'info' | 'error'
 

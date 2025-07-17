@@ -326,7 +326,10 @@ export const optionV2Props = buildProps({
 export const selectV2Emits = {
   [UPDATE_MODEL_EVENT]: (val: SelectV2Props['modelValue']) => true,
   // 新增old参数。By:laiz
-  [CHANGE_EVENT]: (val: SelectV2Props['modelValue'], oldVal: SelectV2Props['modelValue']) => true,
+  [CHANGE_EVENT]: (
+    val: SelectV2Props['modelValue'],
+    oldVal: SelectV2Props['modelValue']
+  ) => true,
   'remove-tag': (val: unknown) => true,
   'visible-change': (visible: boolean) => true,
   focus: (evt: FocusEvent) => evt instanceof FocusEvent,
