@@ -254,6 +254,15 @@ describe('Select', () => {
     )
   })
 
+  it('should show placeholder when no model-value setted', async () => {
+    const wrapper = _mount('<el-select :options="[]"></el-select>')
+    expect(
+      wrapper
+        .find('.el-select__selected-item.el-select__placeholder > span')
+        .text()
+    ).toBe('Select')
+  })
+
   it('default value', async () => {
     const wrapper = createSelect({
       data: () => ({
@@ -986,6 +995,27 @@ describe('Select', () => {
       expect(input.exists()).toBe(true)
       await input.trigger('focus')
       expect(onFocus).toHaveBeenCalledTimes(1)
+    })
+
+    it('should show clear btn on focus', async () => {
+      const wrapper = createSelect({
+        data() {
+          return {
+            value: 'value1',
+            clearable: true,
+            options: [
+              {
+                value: 'value1',
+                label: 'label1',
+              },
+            ],
+          }
+        },
+      })
+      const input = wrapper.find('input')
+      await input.trigger('blur')
+      await input.trigger('focus')
+      expect(wrapper.findComponent(CircleClose).exists()).toBe(true)
     })
 
     it('blur', async () => {

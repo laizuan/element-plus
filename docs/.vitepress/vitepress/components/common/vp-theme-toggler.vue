@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { isDark } from '../../composables/dark'
-
+import { nextTick, ref, watch } from 'vue'
+import { isDark, toggleDark } from '../../composables/dark'
 import DarkIcon from '../icons/dark.vue'
 import LightIcon from '../icons/light.vue'
 
@@ -14,8 +13,17 @@ const switchRef = ref<SwitchInstance>()
 
 watch(
   () => isDark.value,
-  (val) => {
-    darkMode.value = val
+  (newVal) => {
+    darkMode.value = newVal
+  }
+)
+
+watch(
+  () => darkMode.value,
+  (newVal) => {
+    if (newVal !== isDark.value) {
+      toggleDark()
+    }
   }
 )
 
