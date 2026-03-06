@@ -43,9 +43,9 @@ import { addUnit, debugWarn, isNumber, isObject } from '@element-plus/utils'
 import { useNamespace } from '@element-plus/hooks'
 import Bar from './bar.vue'
 import { scrollbarContextKey } from './constants'
-import { scrollbarEmits, scrollbarProps } from './scrollbar'
+import { scrollbarEmits } from './scrollbar'
 
-import type { ScrollbarDirection } from './scrollbar'
+import type { ScrollbarDirection, ScrollbarProps } from './scrollbar'
 import type { BarInstance } from './bar'
 import type { CSSProperties, StyleValue } from 'vue'
 
@@ -55,7 +55,18 @@ defineOptions({
   name: COMPONENT_NAME,
 })
 
-const props = defineProps(scrollbarProps)
+const props = withDefaults(defineProps<ScrollbarProps>(), {
+  distance: 0,
+  height: '',
+  maxHeight: '',
+  wrapStyle: '',
+  wrapClass: '',
+  viewStyle: '',
+  viewClass: '',
+  tag: 'div',
+  minSize: 20,
+  tabindex: undefined,
+})
 const emit = defineEmits(scrollbarEmits)
 
 const ns = useNamespace('scrollbar')
@@ -80,8 +91,10 @@ const barRef = ref<BarInstance>()
 
 const wrapStyle = computed<StyleValue>(() => {
   const style: CSSProperties = {}
-  if (props.height) style.height = addUnit(props.height)
-  if (props.maxHeight) style.maxHeight = addUnit(props.maxHeight)
+  const height = addUnit(props.height)
+  const maxHeight = addUnit(props.maxHeight)
+  if (height) style.height = height
+  if (maxHeight) style.maxHeight = maxHeight
   return [props.wrapStyle, style]
 })
 

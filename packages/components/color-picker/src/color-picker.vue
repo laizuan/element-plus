@@ -27,11 +27,13 @@
         v-bind="panelProps"
         v-click-outside:[triggerRef]="handleClickOutside"
         :border="false"
+        :validate-event="false"
         @keydown.esc="handleEsc"
       >
         <template #footer>
           <div>
             <el-button
+              v-if="clearable"
               :class="ns.be('footer', 'link-btn')"
               text
               size="small"
@@ -124,7 +126,7 @@ import {
 } from '@element-plus/constants'
 import { debugWarn, getEventCode } from '@element-plus/utils'
 import { ArrowDown, Close } from '@element-plus/icons-vue'
-import { colorPickerEmits, colorPickerProps } from './color-picker'
+import { colorPickerEmits, colorPickerPropsDefaults } from './color-picker'
 import {
   ElColorPickerPanel,
   ROOT_COMMON_COLOR_INJECTION_KEY,
@@ -135,11 +137,15 @@ import { useCommonColor } from '@element-plus/components/color-picker-panel/src/
 
 import type { ColorPickerPanelInstance } from '@element-plus/components/color-picker-panel'
 import type { TooltipInstance } from '@element-plus/components/tooltip'
+import type { ColorPickerProps } from './color-picker'
 
 defineOptions({
   name: 'ElColorPicker',
 })
-const props = defineProps(colorPickerProps)
+const props = withDefaults(
+  defineProps<ColorPickerProps>(),
+  colorPickerPropsDefaults
+)
 
 const emit = defineEmits(colorPickerEmits)
 
@@ -285,6 +291,7 @@ function clear() {
     formItem?.validate('change').catch((err) => debugWarn(err))
   }
   resetColor()
+  emit('clear')
 }
 
 function handleShowTooltip() {
@@ -361,7 +368,7 @@ watch(
 watch(
   () => showPicker.value,
   () => {
-    nextTick(pickerPanelRef.value?.update)
+    pickerPanelRef.value && nextTick(pickerPanelRef.value.update)
   }
 )
 

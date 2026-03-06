@@ -13,6 +13,9 @@ export default {
       alphaDescription: '透明度 {alpha}, 当前颜色 {color}',
       hueLabel: '选择色相值',
       hueDescription: '色相 {hue}, 当前颜色 {color}',
+      svLabel: '选择饱和度与明度的值',
+      svDescription: '饱和度 {saturation}, 明度 {brightness}, 当前颜色 {color}',
+      predefineDescription: '选择 {value} 作为颜色',
     },
     datepicker: {
       now: '此刻',
@@ -146,6 +149,15 @@ export default {
       resetFilter: '重置',
       clearFilter: '全部',
       sumText: '合计',
+      selectAllLabel: '选择所有行',
+      selectRowLabel: '选择当前行',
+      expandRowLabel: '展开当前行',
+      collapseRowLabel: '收起当前行',
+      sortLabel: '按 {column} 排序',
+      filterLabel: '按 {column} 过滤',
+    },
+    tag: {
+      close: '关闭此标签',
     },
     tour: {
       next: '下一步',

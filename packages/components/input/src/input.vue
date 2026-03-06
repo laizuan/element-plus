@@ -80,6 +80,8 @@
               v-if="showPwdVisible"
               :class="[nsInput.e('icon'), nsInput.e('password')]"
               @click="handlePasswordVisible"
+              @mousedown.prevent="NOOP"
+              @mouseup.prevent="NOOP"
             >
               <component :is="passwordIcon" />
             </el-icon>
@@ -121,6 +123,7 @@
         ref="textarea"
         :class="[nsTextarea.e('inner'), nsInput.is('focus', isFocused)]"
         v-bind="attrs"
+        :name="name"
         :minlength="minlength"
         :maxlength="maxlength"
         :tabindex="tabindex"
@@ -172,7 +175,7 @@ import {
 import { useResizeObserver } from '@vueuse/core'
 import { isNil } from 'lodash-unified'
 import { ElIcon } from '@element-plus/components/icon'
-import { Hide as IconHide, View as IconView } from '@element-plus/icons-vue'
+import { Hide, View } from '@element-plus/icons-vue'
 import {
   useFormDisabled,
   useFormItem,
@@ -199,9 +202,10 @@ import {
   UPDATE_MODEL_EVENT,
 } from '@element-plus/constants'
 import { calcTextareaHeight, looseToNumber } from './utils'
-import { inputEmits, inputProps } from './input'
+import { inputEmits, inputPropsDefaults } from './input'
 
 import type { StyleValue } from 'vue'
+import type { InputProps } from './input'
 
 type TargetElement = HTMLInputElement | HTMLTextAreaElement
 
@@ -210,7 +214,7 @@ defineOptions({
   name: COMPONENT_NAME,
   inheritAttrs: false,
 })
-const props = defineProps(inputProps)
+const props = withDefaults(defineProps<InputProps>(), inputPropsDefaults)
 const emit = defineEmits(inputEmits)
 
 const rawAttrs = useRawAttrs()
@@ -276,9 +280,7 @@ const validateState = computed(() => elFormItem?.validateState || '')
 const validateIcon = computed(
   () => validateState.value && ValidateComponentsMap[validateState.value]
 )
-const passwordIcon = computed(() =>
-  passwordVisible.value ? IconView : IconHide
-)
+const passwordIcon = computed(() => (passwordVisible.value ? View : Hide))
 const containerStyle = computed<StyleValue>(() => [
   rawAttrs.style as StyleValue,
 ])
@@ -333,12 +335,16 @@ const [recordCursor, setCursor] = useCursor(input)
 
 useResizeObserver(textarea, (entries) => {
   onceInitSizeTextarea()
-  if (!isWordLimitVisible.value || props.resize !== 'both') return
+  if (
+    !isWordLimitVisible.value ||
+    (props.resize !== 'both' && props.resize !== 'horizontal')
+  )
+    return
   const entry = entries[0]
   const { width } = entry.contentRect
   countStyle.value = {
-    /** right: 100% - width + padding(15) + right(6) */
-    right: `calc(100% - ${width + 15 + 6}px)`,
+    /** right: 100% - width + padding(22) - right(10) */
+    right: `calc(100% - ${width + 22 - 10}px)`,
   }
 })
 
@@ -392,7 +398,7 @@ const setNativeInputValue = () => {
   const formatterValue = props.formatter
     ? props.formatter(nativeInputValue.value)
     : nativeInputValue.value
-  if (!input || input.value === formatterValue) return
+  if (!input || input.value === formatterValue || props.type === 'file') return
   input.value = formatterValue
 }
 
@@ -455,7 +461,7 @@ const handleChange = async (event: Event) => {
   if (props.modelModifiers.lazy) {
     emit(UPDATE_MODEL_EVENT, value)
   }
-  emit(CHANGE_EVENT, value)
+  emit(CHANGE_EVENT, value, event)
 
   await nextTick()
   setNativeInputValue()
@@ -469,10 +475,7 @@ const {
 } = useComposition({ emit, afterComposition: handleInput })
 
 const handlePasswordVisible = () => {
-  recordCursor()
   passwordVisible.value = !passwordVisible.value
-  // The native input needs a little time to regain focus
-  setTimeout(setCursor)
 }
 
 const focus = () => _ref.value?.focus()

@@ -2,7 +2,7 @@ import { h, nextTick, onMounted, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { EVENT_CODE } from '@element-plus/constants'
-import { ElFormItem } from '@element-plus/components/form'
+import { ElForm, ElFormItem } from '@element-plus/components/form'
 import Slider from '../src/slider.vue'
 
 import type { SliderProps } from '../src/slider'
@@ -345,6 +345,34 @@ describe('Slider', () => {
       )
       await nextTick()
       expect(value.value).toBe(10)
+    })
+
+    it('should have appropriate ARIA attributes', async () => {
+      const value = ref(30)
+      const disabled = ref(false)
+      const wrapper = mount(() => (
+        <Slider
+          v-model={value.value}
+          min={0}
+          max={100}
+          step={10}
+          disabled={disabled.value}
+        />
+      ))
+
+      const sliderButton = wrapper.findComponent({ name: 'ElSliderButton' })
+      expect(sliderButton.attributes('tabindex')).toBe('0')
+      expect(sliderButton.attributes('role')).toBe('slider')
+      expect(sliderButton.attributes('aria-valuemin')).toBe('0')
+      expect(sliderButton.attributes('aria-valuemax')).toBe('100')
+      expect(sliderButton.attributes('aria-valuenow')).toBe('30')
+      expect(sliderButton.attributes('aria-valuetext')).toBe('30')
+      expect(sliderButton.attributes('aria-orientation')).toBe('horizontal')
+      expect(sliderButton.attributes('aria-disabled')).toBe('false')
+
+      await (disabled.value = true)
+      expect(sliderButton.attributes('tabindex')).toBeUndefined()
+      expect(sliderButton.attributes('aria-disabled')).toBe('true')
     })
   })
 
@@ -761,6 +789,18 @@ describe('Slider', () => {
       await nextTick()
       const formItem = wrapper.find('[data-test-ref="item"]')
       expect(formItem.attributes().role).toBe('group')
+    })
+
+    it('The disabled state of a component has higher priority than that of a form', async () => {
+      const wrapper = mount(() => (
+        <ElForm disabled>
+          <Slider disabled={false} />
+        </ElForm>
+      ))
+
+      await nextTick()
+      const slider = wrapper.find('.el-slider__runway')
+      expect(slider.classes()).not.toContain('is-disabled')
     })
   })
 })
