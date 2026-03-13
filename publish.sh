@@ -18,10 +18,10 @@ pnpm build
 authToken=$(cat ./.npmtoken)
 
 cd dist/element-plus
-
+pwd
 cat > ./.npmrc << EOF
 registry=https://registry.npmjs.org/
-//registry.npmjs.org/:always-auth=true
+always-auth=true
 //registry.npmjs.org/:_authToken=${authToken}
 EOF
 
