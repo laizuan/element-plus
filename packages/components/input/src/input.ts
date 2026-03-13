@@ -377,7 +377,8 @@ export const inputEmits = {
    * 清空输入框的值
    * @param oldValue 清空前的值
    */
-  clear: (oldValue: string) => isString(oldValue),
+  clear: (oldValue: string, evt?: MouseEvent) =>
+    isString(oldValue) && (evt === undefined || evt instanceof MouseEvent),
   mouseleave: (evt: MouseEvent) => evt instanceof MouseEvent,
   mouseenter: (evt: MouseEvent) => evt instanceof MouseEvent,
   // NOTE: when autofill by browser, the keydown event is instanceof Event, not KeyboardEvent
