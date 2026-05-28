@@ -12,6 +12,7 @@ import {
   isNumber,
 } from '@element-plus/utils'
 import { CHANGE_EVENT, UPDATE_MODEL_EVENT } from '@element-plus/constants'
+import { scrollbarEmits } from '@element-plus/components/scrollbar'
 import { useTooltipContentProps } from '@element-plus/components/tooltip'
 import { ArrowDown, CircleClose } from '@element-plus/icons-vue'
 import { tagProps } from '../../tag'
@@ -119,7 +120,7 @@ export const selectV2Props = buildProps({
     default: undefined,
   },
   /**
-   * @description
+   * @description Estimated item height for variable option sizes. Defaults to fixed `itemHeight` when omitted.
    */
   estimatedOptionHeight: {
     type: Number,
@@ -379,6 +380,7 @@ export const selectV2Emits = {
     val: SelectV2Props['modelValue'],
     oldVal: SelectV2Props['modelValue']
   ) => true,
+  'end-reached': scrollbarEmits['end-reached'],
   'remove-tag': (val: unknown) => true,
   'visible-change': (visible: boolean) => true,
   focus: (evt: FocusEvent) => evt instanceof FocusEvent,

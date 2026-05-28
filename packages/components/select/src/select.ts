@@ -326,13 +326,15 @@ export const selectProps = buildProps({
 })
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export const selectEmits = {
-  [UPDATE_MODEL_EVENT]: (val: SelectProps['modelValue']) => true,
+  // todo: use generics to eliminate any
+  [UPDATE_MODEL_EVENT]: (val: SelectProps['modelValue'] | any) => true,
   // change事件新增oldVal参数。By:laiz
   [CHANGE_EVENT]: (
     val: SelectProps['modelValue'],
     oldVal: SelectProps['modelValue']
   ) => true,
   'popup-scroll': scrollbarEmits.scroll,
+  'end-reached': scrollbarEmits['end-reached'],
   'remove-tag': (val: unknown) => true,
   'visible-change': (visible: boolean) => true,
   focus: (evt: FocusEvent) => evt instanceof FocusEvent,
