@@ -21,6 +21,7 @@ cypress/videos/*
 tmp
 .temp
 docs/.vitepress/cache
+.pnpm-store
 
 .npmtoken
 .npmrc

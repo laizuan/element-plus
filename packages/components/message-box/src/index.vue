@@ -113,7 +113,10 @@
                 </div>
               </div>
             </div>
-            <div :class="ns.e('btns')">
+            <div
+              v-if="showCancelButton || showConfirmButton"
+              :class="ns.e('btns')"
+            >
               <el-button
                 v-if="showExtraButton"
                 :loading="confirmButtonLoading"
