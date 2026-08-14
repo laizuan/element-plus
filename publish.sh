@@ -22,7 +22,6 @@ pwd
 cat > ./.npmrc << EOF
 registry=https://registry.npmjs.org/
 always-auth=true
-//registry.npmjs.org/:_authToken=${authToken}
 EOF
 
 cat > ./.npmignore << EOF
