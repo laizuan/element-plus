@@ -15,20 +15,19 @@ pnpm update:version
 pnpm build
 
 
-authToken=$(cat ./.npmtoken)
+#authToken=$(cat ./.npmtoken)
 
 cd dist/element-plus
 pwd
 cat > ./.npmrc << EOF
 registry=https://registry.npmjs.org/
-always-auth=true
 EOF
 
 cat > ./.npmignore << EOF
 .npmrc
 EOF
 
-npm publish  --access public
+npm publish  --access public --tag build
 
 rm -rf ./.npmrc
 rm -rf ./.npmignore
