@@ -30,7 +30,7 @@
       <slot />
       <transition-group :name="`${ns.namespace.value}-zoom-in-top`">
         <slot v-if="shouldShowError" name="error" :error="validateMessage">
-          <div :class="validateClasses">
+          <div :class="validateClasses" role="alert">
             {{ validateMessage }}
           </div>
         </slot>
